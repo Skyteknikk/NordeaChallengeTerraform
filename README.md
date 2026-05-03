@@ -263,14 +263,16 @@ NordeaChallengeTerraform/
 ```
 
 
-### Using Terraform as IaC
+### Using Terraform as IaC with Common tools
 
-Before running Terraform:
-
--- Azure Subscription
--- Azure CLI installed and logged in:
-az login
-Terraform installed (>= 1.5)
+-- Azure CLI installed on Workstation and used via Powershell Client 
+-- git 
+-- VSCode
+-- Azure Portal
+-- Github
+-- Local
+-- Bash & Powershell Commands
+-- az-commands
 
 ### How to Deploy
 1. Initialize Terraform
