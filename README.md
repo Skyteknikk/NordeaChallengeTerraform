@@ -5,7 +5,7 @@ The solution emphasizes cost-efficiency, security, and enterprise-grade best pra
 Since its a single region demo, the deployment has not used features like Azure Front door or CDN, the solution does not implement  high availability in respect of the solution architecture.
 The solution may also be low on Performance Efficiency if it cannot be scaled
 
-# Solution Architecture Diagram
+### Solution Architecture Diagram
 
  ![Architectural](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/Topology.png)
 This repository contains terraform code to deploy a stand alone Web app Azure App Services basic architecture.
@@ -26,7 +26,7 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 - ⚙️  Azure Application Gateway or Azure Front Door will achieve the same thing to secure ingress in this deployment we go with Application Gateway
 -  Azure Key Vault is always recommended for secrets management either used by the application or database.
 
-# Reference for the Architecture
+### Reference for the Architecture
 
 [Basic SetApp](https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service/architectures/basic-web-app)
 [Enterprise Deployment] (https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service-environment/architectures/ase-standard-deployment)
@@ -34,7 +34,7 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 [Best Practices] (https://learn.microsoft.com/en-us/azure/well-architected/service-guides/app-service-web-apps)
 
 
-# App Logic Workflow
+### App Logic Workflow
 
 > - A user issues an HTTPS request to the App Service's default domain on azurewebsites.net. This domain automatically points to your App Service's built-in public IP. 
 > - The TLS connection is established from the client directly to app service. The certificate is managed completely by Azure.
@@ -226,12 +226,12 @@ Senior Cloud Platform Engineer Candidate
 
 
 
-# Identity Consideration
+## Identity Consideration
 
 > - Us Microsoft Entra to provide a single identity control plane to manage permissions and roles for users accessing your web application. 
 > - Aiming to easily integrates with App Service and simplifies authentication and authorization for web apps.
 
-# Reliability Considerations
+### Reliability Considerations
 
 > - The App Service Plan is configured for the Standard tier, which doesn't have Azure availability zone support. 
 > - The App Service becomes unavailable in the event of any issue with the instance, the rack, or the datacenter hosting the instance.
@@ -240,7 +240,7 @@ Senior Cloud Platform Engineer Candidate
 > - This deployment downtime is addressed in the baseline architecture through deployment slots. Careful application design, schema management, and application configuration handling are necessary to support concurrent slot deployment. 
 > - Autoscaling isn't enabled in this basic architecture. Multi-region App Service app approaches for disaster recovery 
 
-# Security Considerations
+### Security Considerations
 
 > - A single secure entry point for client traffic
 > - Network traffic is filtered both at the packet level and at the DDoS level.
@@ -255,7 +255,7 @@ Senior Cloud Platform Engineer Candidate
 > - HTTP requests are redirected to the HTTPS endpoint by default and using a custom domain associated with application gateway
 > - Using managed identity to authenticate to Azure SQL Server.
 
-# Cost Optimization Considerations
+### Cost Optimization Considerations
 
 
 The solution architecture is optimizes for cost with a few trade offs against 7 pillars of the Well-Architected Framework such as scalabity and high availability
@@ -270,7 +270,7 @@ The cost savings mainly effects the Baseline for highly available zone-redundant
 
 The estimated cost of this architecture can be computed using  the Pricing calculator estimate using this architecture's components.
 
-# Operational Excellence Considerations
+### Operational Excellence Considerations
 
 App configurations
 
@@ -280,7 +280,7 @@ Azure Key Vault enables the centralization of storing of secrets.
 Using Azure Key Vault enables able the logging of every interaction with secrets, including every time a secret is accessed.
 
 
-# Performance Efficiency Considerations
+### Performance Efficiency Considerations
 
 > - Support for horizontal scaling by adjusting the number of compute instances deployed in the App Service Plan.
 > - The Standard tier does support auto scale settings to allow the configuration of rule-based autoscaling. 
@@ -312,20 +312,20 @@ Using Azure Key Vault enables able the logging of every interaction with secrets
 > - Azure CLI authenticated (`az login`)
 > - Azure subscription assigned
 
-# Clone your GitHub repository
+### Clone your GitHub repository
 git clone https://github.com/<your-org>/<your-repo>.git
 cd terraform/
 
-# Initialize Terraform
+### Initialize Terraform
 terraform init
 
-# Review the deployment plan
+### Review the deployment plan
 terraform plan
 
-# Apply the infrastructure
+### Apply the infrastructure
 terraform apply
 
-# Option 2
+### Option 2
 
 > - Visual Studio Code
 > - Github Repository
@@ -333,7 +333,7 @@ terraform apply
 
 git clone https://github.com/<your-org>/<your-repo>.git
 
-# Option 2
+### Option 2
 
 > - Github Repo
 > - Github Action
