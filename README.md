@@ -23,7 +23,7 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 - ✅ Azure Key Vault
 - ✅ Azure Log Analytic Workspace
 
-- ⚙️  Azure Application Gateway or Azure Front Door will achieve the same thing to secure ingress in this deployment we go with Application Gateway
+-  Azure Application Gateway or Azure Front Door will achieve the same thing to secure ingress in this deployment we go with Application Gateway
 -  Azure Key Vault is always recommended for secrets management either used by the application or database.
 
 ### Reference for the Architecture
@@ -108,9 +108,6 @@ webapp-sql-terraform/
         └── deploy.yml     # GitHub Actions CI/CD workflow
 ```
 
-Nordea Infrastructure as Code Challenge
-Overview
-
 This project provisions a secure, highly available web application infrastructure on Microsoft Azure using Terraform.
 
 The solution follows a Hub-and-Spoke network topology and implements best practices for:
@@ -122,8 +119,9 @@ Private service connectivity
 
 The application itself is a simple Nginx web server deployed on a Virtual Machine Scale Set (VMSS).
 
-Architecture Summary
-High-Level Design
+### Architecture Summary (High-Level Design)
+
+```
 Hub VNet (10.50.0.0/16)
 Azure Firewall (egress control)
 Azure Bastion (secure admin access)
@@ -162,6 +160,8 @@ Custom hostname mapped to Application Gateway
 Local hosts file can be used for testing
 Architectural Decisions
 Hub-Spoke Model
+
+```
 
 Separates shared services (firewall, bastion) from application workloads.
 
@@ -273,7 +273,254 @@ Author
 
 Mutale Chewe
 Senior Cloud Platform Engineer Candidate
+Terraform Modules Used
+Module	Purpose
+hub_network	Firewall + Bastion hub
+spoke_network	App + private resources
+bastion	Secure VM access
+compute	VM Scale Set (NGINX)
+app_gateway	HTTPS + WAF
+sql_database	Azure SQL + Private Endpoint
+keyvault	Secrets management
+monitoring	Log Analytics
+dns	Private DNS + App record
+Prerequisites
 
+Install the following tools:
+
+Terraform >= 1.5
+Azure CLI
+PowerShell
+Azure Subscription
+
+Verify:
+
+terraform version
+az version
+
+Login:
+
+az login
+
+Select subscription:
+
+az account set --subscription "<subscription-id>"
+Required Files
+
+Before running Terraform:
+
+Create:
+
+certs/appgw-cert.pfx
+
+This certificate is used for:
+
+HTTPS termination at Application Gateway
+
+If using self-signed:
+
+$cert = New-SelfSignedCertificate `
+  -DnsName "app.nordea.local" `
+  -CertStoreLocation "cert:\CurrentUser\My" `
+  -KeyExportPolicy Exportable `
+  -KeyLength 2048 `
+  -NotAfter (Get-Date).AddYears(1)
+
+$pwd = ConvertTo-SecureString `
+  -String "ChangeMe123!" `
+  -Force -AsPlainText
+
+Export-PfxCertificate `
+  -Cert $cert `
+  -FilePath ".\certs\appgw-cert.pfx" `
+  -Password $pwd
+Terraform Initialization
+
+Run:
+
+terraform init
+
+This:
+
+Downloads providers
+Initializes backend
+Loads modules
+Validate Configuration
+terraform fmt -recursive
+terraform validate
+Deploy Infrastructure
+terraform plan -out tfplan
+terraform apply tfplan
+
+Deployment time:
+
+~15–25 minutes
+
+Major resources:
+
+Firewall
+Bastion
+Application Gateway
+SQL Database
+VM Scale Set
+After Deployment
+
+Retrieve outputs:
+
+terraform output
+
+Example:
+
+app_gateway_public_ip
+application_url
+Configure Local DNS (Hosts File)
+
+Edit:
+
+C:\Windows\System32\drivers\etc\hosts
+
+Add:
+
+<APP_GATEWAY_PUBLIC_IP> app.nordea.local
+
+Example:
+
+52.174.xx.xx app.nordea.local
+Verify Deployment
+
+Open browser:
+
+https://app.nordea.local
+
+Expected:
+
+NGINX welcome page
+
+Or:
+
+curl -k https://app.nordea.local
+Security Features Implemented
+Network Security
+Hub-Spoke segmentation
+NSGs applied per subnet
+No public database access
+Private endpoints enforced
+Identity Security
+System-assigned managed identities
+Key Vault RBAC access control
+Encryption
+HTTPS enforced
+TLS certificate configured
+Azure SQL encrypted at rest
+Private networking used
+Traffic Inspection
+Azure Firewall routing
+WAF enabled on Application Gateway
+
+OWASP WAF:
+
+OWASP 3.2 Prevention Mode
+PCI DSS Alignment
+
+This architecture supports:
+
+PCI Requirement	Implementation
+Network Segmentation	Hub-Spoke VNet
+Firewall Controls	Azure Firewall
+Secure Admin Access	Azure Bastion
+Encryption in Transit	HTTPS
+Restricted DB Access	Private Endpoint
+Logging	Log Analytics
+Destroy Infrastructure
+
+To remove all resources:
+
+terraform destroy
+Cost Considerations
+
+Major cost drivers:
+
+Azure Firewall
+Application Gateway (WAF v2)
+Bastion
+VM Scale Set
+
+Recommended:
+
+Destroy resources after testing.
+Architectural Decisions
+Why Hub-and-Spoke?
+
+Provides:
+
+Centralized security
+Easier compliance
+Strong network segmentation
+
+Used in:
+
+Banking
+Healthcare
+PCI DSS workloads
+Why Application Gateway?
+
+Provides:
+
+HTTPS termination
+Layer 7 routing
+Web Application Firewall
+Backend load balancing
+Why Private Endpoints?
+
+Prevents:
+
+Public internet database exposure
+
+All database access remains:
+
+Inside Azure private network
+Why Bastion?
+
+Removes:
+
+Public SSH ports
+
+Provides:
+
+Browser-based secure access
+Future Enhancements
+
+Recommended production upgrades:
+
+Azure Front Door
+Azure DDoS Protection
+Azure Sentinel integration
+Multi-region deployment
+Key Vault certificate automation
+Private DNS forwarding
+Repository Structure
+.
+├── modules/
+│   ├── hub_network/
+│   ├── spoke_network/
+│   ├── bastion/
+│   ├── compute/
+│   ├── app_gateway/
+│   ├── sql_database/
+│   ├── keyvault/
+│   ├── monitoring/
+│   ├── dns/
+│
+├── cloud-init/
+│   └── nginx.yaml
+│
+├── certs/
+│   └── appgw-cert.pfx
+│
+├── main.tf
+├── variables.tf
+├── terraform.tfvars
+└── README.md
 
 
 ## Identity Consideration
