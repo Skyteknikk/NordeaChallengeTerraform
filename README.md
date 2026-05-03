@@ -10,7 +10,7 @@ The solution may also be low on Performance Efficiency if it cannot be scaled
  ![Architectural](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/Topology.png)
 This repository contains terraform code to deploy a stand alone Web app Azure App Services basic architecture.
 
-## ☁️ Solution Components Deployed
+# ☁️ Solution Components Deployed
 
 - ✅ Azure Virtual Network With Subnets
 - ✅ Azure Subnets Fixed with NSG 
