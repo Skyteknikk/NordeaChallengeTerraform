@@ -292,27 +292,26 @@ az vmss list-instances \
   --name vmss-web-nordea-challenge-dev \
   -o table
 
-Step 2: Test Application
+### Step 2: Test Application
 
-If using local DNS override:
+> If using local DNS override:
 
-Add to hosts file:
+> Add to local hosts file:
 
 <app_Gateaway_public_ip> app.nordea.local
 
 Then test:
 
-Invoke-WebRequest https://app.nordea.local -SkipCertificateCheck
+-- Invoke-WebRequest https://app.nordea.local -SkipCertificateCheck
 
-Expected output:
+```
+Expected output: The Nginx Page shown in docs.
 
-<h1>Nordea Challenge</h1>
-Step 3: Backend Health
+
+### Step 3: Backend Health
 az network application-gateway show-backend-health \
   --name agw-nordea-challenge-dev \
   --resource-group rg-nordea-challenge-dev
-
-````
 
 ### Notes / Known Limitations if excuting locally
 
@@ -330,17 +329,11 @@ az network application-gateway show-backend-health \
 
 ```
 
-Before running Terraform:
+### Creating self-signed certficate of ssl
 
-Create:
+Create: certs/appgw-cert.pfx
 
-certs/appgw-cert.pfx
-
-This certificate is used for:
-
-HTTPS termination at Application Gateway
-
-If using self-signed:
+This certificate is used for: HTTPS termination at Application Gateway
 
 $cert = New-SelfSignedCertificate `
   -DnsName "app.nordea.local" `
