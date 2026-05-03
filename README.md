@@ -36,6 +36,8 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 
 ### How the solution is setup
 
+
+```
 Microsoft Entra ID
 └─ Authenticates Terraform user/service principal
 └─ Provides managed identities and RBAC for Key Vault access
@@ -88,6 +90,7 @@ Standalone / PaaS resources
 │
 └─ Log Analytics Workspace
    └─ Central diagnostics/log collection
+```
 
 ## Project Structure
 
