@@ -121,7 +121,7 @@ The application itself is a simple Nginx web server deployed on a Virtual Machin
 
 ### Architecture Summary (High-Level Design)
 
-```
+`
 Hub VNet (10.50.0.0/16)
 Azure Firewall (egress control)
 Azure Bastion (secure admin access)
@@ -161,7 +161,7 @@ Local hosts file can be used for testing
 Architectural Decisions
 Hub-Spoke Model
 
-```
+`
 
 Separates shared services (firewall, bastion) from application workloads.
 
