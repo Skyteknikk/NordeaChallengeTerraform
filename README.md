@@ -8,7 +8,13 @@ The solution may also be low on Performance Efficiency if it cannot be scaled
 ### Solution Architecture Diagram
 
  ![Architectural](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/docs/Topology1.JPG)
-This repository contains terraform code to deploy a stand alone Web app Azure App Services basic architecture.
+
+> The solution follows a Hub-and-Spoke network topology and implements best practices for:
+
+-- Network isolation
+-- Secure access
+-- Traffic distribution
+-- Private service connectivity
 
 ### Solution Components Deployed
 
@@ -27,7 +33,51 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 -- Azure SQL Database (data tier)
 -- Azure DNS (custom domain)
 ```
-  
+> The application itself is a simple Nginx web server deployed on a Virtual Machine Scale Set (VMSS).
+
+### Separates shared services (firewall, bastion) from application workloads.
+
+Benefits:
+
+-- Better security isolation
+-- Centralized control
+-- Scalable design
+-- Azure Firewall for Egress Control
+
+#### All outbound traffic from the web tier is routed via the firewall.
+
+> - Reason for this design:
+
+-- Enforces controlled internet access
+-- Required for secure enterprise architecture
+-- Solved package installation issues (apt-get)
+
+### Private Endpoints
+
+Used for:
+
+-- Key Vault
+-- SQL Database
+
+Reason for this design :
+
+-- Eliminates public exposure
+-- Aligns with zero-trust principles
+-- Application Gateway (WAF)
+-- Handles HTTPS
+-- Provides Layer 7 load balancing
+-- Protects against OWASP threats
+
+### Cloud-init for Configuration
+
+Used to install and configure Nginx automatically.
+
+Reason for this choice:
+
+Ensures full automation
+No manual intervention required
+Prerequisites
+
 ### Key Components
 
 ```
@@ -66,7 +116,6 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 
 ### Reference for the Architecture
 
-[Basic SetApp](https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service/architectures/basic-web-app)
 [Enterprise Deployment] (https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service-environment/architectures/ase-standard-deployment)
 
 [Best Practices] (https://learn.microsoft.com/en-us/azure/well-architected/service-guides/app-service-web-apps)
@@ -130,77 +179,93 @@ Standalone / PaaS resources
    └─ Central diagnostics/log collection
 ```
 
-## Project Structure
-
+## GitHub Project  File Structure
 
 ```
-webapp-sql-terraform/
+NordeaChallengeTerraform/
 │
-├── main.tf                # Main infrastructure definitions
-├── variables.tf           # All input variables
-├── terraform.tfvars       # Actual values for variables
-├── outputs.tf             # Outputs like WebApp URL
+├── README.md
+├── .gitignore
+├── versions.tf
+├── providers.tf
+├── backend.tf
+├── variables.tf
+├── locals.tf
+├── outputs.tf
+├── main.tf
+│
+├── cloud-init/
+│   └── nginx.yaml
+│
+├── modules/
+│   ├── hub_network/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── spoke_network/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── hub_spoke_peering/
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   │
+│   ├── bastion/
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   │
+│   ├── app_gateway/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── compute/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── sql_database/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── keyvault/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── dns/
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   │
+│   └── monitoring/
+│       ├── main.tf
+│       └── variables.tf
+│
+└── docs/
+    └── topologg1.jpg
+
+````
+
+### Github Action Option
+```
+NordeaChallengeTerraform/
+│
+├──               
+├──        
+├──     
+├──          
 │
 └── .github/
     └── workflows/
         └── deploy.yml     # GitHub Actions CI/CD workflow
 ```
 
-This project provisions a secure, highly available web application infrastructure on Microsoft Azure using Terraform.
 
-The solution follows a Hub-and-Spoke network topology and implements best practices for:
+### Using Terraform as IaC
 
-Network isolation
-Secure access
-Traffic distribution
-Private service connectivity
-
-The application itself is a simple Nginx web server deployed on a Virtual Machine Scale Set (VMSS).
-
-### Architecture Summary (High-Level Design)
-
-
-
-Separates shared services (firewall, bastion) from application workloads.
-
-Benefits:
-
-Better security isolation
-Centralized control
-Scalable design
-Azure Firewall for Egress Control
-
-All outbound traffic from the web tier is routed via the firewall.
-
-Why:
-
-Enforces controlled internet access
-Required for secure enterprise architecture
-Solved package installation issues (apt-get)
-Private Endpoints
-
-Used for:
-
-Key Vault
-SQL Database
-
-Why:
-
-Eliminates public exposure
-Aligns with zero-trust principles
-Application Gateway (WAF)
-Handles HTTPS
-Provides Layer 7 load balancing
-Protects against OWASP threats
-Cloud-init for Configuration
-
-Used to install and configure Nginx automatically.
-
-Why:
-
-Ensures full automation
-No manual intervention required
-Prerequisites
 
 Before running Terraform:
 
