@@ -2,7 +2,7 @@
 
 This project provisions a Tiered  VM based Scalable Azure Web Application (Compute + Data Tier) provided by SQL Database Provisioned using Terraform. 
 The solution emphasizes cost-efficiency, security, and enterprise-grade best practices.
-Since its a single region demo, the deployment has not used features like Azure Front door or CDN, the solution does not implement  high availability in respect of the solution architecture.
+Since its a single region demo, the deployment has not used features like Azure Front door or CDN, the solution does not implement high availability in respect of production solution architecture.
 The solution may also be low on Performance Efficiency if it cannot be scaled
 
 ### Solution Architecture Diagram
@@ -10,7 +10,7 @@ The solution may also be low on Performance Efficiency if it cannot be scaled
  ![Architectural](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/Topology.png)
 This repository contains terraform code to deploy a stand alone Web app Azure App Services basic architecture.
 
-# ☁️ Solution Components Deployed
+# Solution Components Deployed
 
 - ✅ Azure Virtual Network With Subnets
 - ✅ Azure Subnets Fixed with NSG 
@@ -34,13 +34,60 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 [Best Practices] (https://learn.microsoft.com/en-us/azure/well-architected/service-guides/app-service-web-apps)
 
 
-### App Logic Workflow
+### How the solution is setup
 
-> - A user issues an HTTPS request to the App Service's default domain on azurewebsites.net. This domain automatically points to your App Service's built-in public IP. 
-> - The TLS connection is established from the client directly to app service. The certificate is managed completely by Azure.
-> - Easy Auth, a feature of Azure App Service, ensures that the user accessing the site is authenticated with Microsoft Entra ID.
-> - connect to an Azure SQL Database instance, using a connection string configured in the App Service configured as an app setting.
-> - The information about original request to App Service and the call to Azure SQL Database are logged in Application Insights.
+Microsoft Entra ID
+└─ Authenticates Terraform user/service principal
+└─ Provides managed identities and RBAC for Key Vault access
+
+Hub VNet: vnet-hub-nordea-challenge-dev
+├─ AzureFirewallSubnet
+│  └─ Azure Firewall
+│     └─ Central outbound inspection/control
+│
+├─ AzureBastionSubnet
+│  └─ Azure Bastion
+│     └─ Secure admin access to private VMs
+│
+└─ Public IPs
+   ├─ Firewall Public IP
+   └─ Bastion Public IP
+
+Spoke VNet: vnet-nordea-challenge-dev
+├─ snet-appgw
+│  └─ Application Gateway WAF v2
+│     └─ Public HTTPS entry point
+│
+├─ snet-web
+│  └─ Linux VM Scale Set
+│     └─ Nginx web tier
+│
+├─ snet-private-endpoints
+│  ├─ Private Endpoint for Azure SQL Database
+│  └─ Private Endpoint for Key Vault
+│
+└─ Route Table
+   └─ 0.0.0.0/0 → Azure Firewall private IP
+
+Private DNS Zones
+├─ privatelink.database.windows.net
+│  └─ Resolves Azure SQL private endpoint
+│
+└─ privatelink.vaultcore.azure.net
+   └─ Resolves Key Vault private endpoint
+
+Standalone / PaaS resources
+├─ Azure SQL Database
+│  └─ Public access disabled
+│
+├─ Azure Key Vault
+│  └─ Public network access disabled
+│
+├─ Azure DNS zone
+│  └─ nordea.local
+│
+└─ Log Analytics Workspace
+   └─ Central diagnostics/log collection
 
 ## Project Structure
 
