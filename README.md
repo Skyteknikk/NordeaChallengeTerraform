@@ -387,15 +387,16 @@ Deployment time:
 
 ### The App URL or IP address output Retrieve 
 
-terraform output
+run: terraform output app_gateway_public_ip  (gets you <APP_GATEWAY_PUBLIC_IP> )
 
--- app_gateway_public_ip
+-- app_gateway_public_ip 
 -- application_url
 
 ### Configure Local DNS (Hosts File)
 
 ```
-by Editing :
+by Editing on you local machine: because we mock/local domain for the challenge.
+(local is not publicly resolvable on the internet, so your computer needs a hosts-file override).
 
 C:\Windows\System32\drivers\etc\hosts
 
@@ -403,13 +404,10 @@ Add:
 
 <APP_GATEWAY_PUBLIC_IP> app.nordea.local
 
-Example:
-
-52.174.xx.xx app.nordea.local
+Example: 52.174.xx.xx app.nordea.local
 Verify Deployment
 
 ```
-
 ### Viewing the Nginx App Page:
 
 https://app.nordea.local
@@ -588,7 +586,7 @@ The estimated cost of this architecture can be computed using  the Pricing calcu
 > - Azure CLI authenticated (`az login`)
 > - Azure subscription assigned
 
-### Clone your GitHub repository
+### Clone my GitHub repository
 git clone https://github.com/<your-org>/<your-repo>.git
 cd terraform/
 
@@ -622,17 +620,12 @@ We set the secrets in Github via Settings → Secrets and variables → Actions 
 Add:
 
 ```
-ARM_CLIENT_ID  ..... client_id  
-
-ARM_CLIENT_SECRET ..... client_secret 
-
-ARM_SUBSCRIPTION_ID ...... subscription_id
-
-ARM_TENANT_ID ..... tenant_id 
+-- ARM_CLIENT_ID  ..... client_id  
+-- ARM_CLIENT_SECRET ..... client_secret 
+-- ARM_SUBSCRIPTION_ID ...... subscription_id
+-- ARM_TENANT_ID ..... tenant_id 
 
 ```
-
-In deploy.yml, inject secrets as environment variables if needed.
 
 
 
