@@ -313,7 +313,6 @@ az network application-gateway show-backend-health \
   --resource-group rg-nordea-challenge-dev
 
 ````
-Expected:
 
 ### Notes / Known Limitations if excuting locally
 
@@ -329,16 +328,7 @@ Expected:
 -- Replace self-signed cert with Azure-managed certificate
 -- Observability (alerts + dashboards)
 
-This solution demonstrates:
-
-Secure Azure architecture design
-Infrastructure as Code best practices
-Full automation from zero to running application
-Real-world enterprise patterns (Hub-Spoke, Private Link, WAF)
-Author
-
-Mutale Chewe
-Senior Cloud Platform Engineer Candidate
+```
 
 Before running Terraform:
 
@@ -368,9 +358,11 @@ Export-PfxCertificate `
   -FilePath ".\certs\appgw-cert.pfx" `
   -Password $pwd
 
+```
 
 ### Terraform Initialization
-````
+ ![TerraformVSCOde](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/docs/Terraform%20Apply.JPG) 
+```
 Run:
 
 terraform init
