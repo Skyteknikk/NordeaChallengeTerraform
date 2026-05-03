@@ -383,18 +383,19 @@ Deployment time:
 
 ~15–30 minutes
 
+```
 
-Retrieve outputs:
+### The App URL or IP address output Retrieve 
 
 terraform output
 
-Example:
+-- app_gateway_public_ip
+-- application_url
 
-app_gateway_public_ip
-application_url
-Configure Local DNS (Hosts File)
+### Configure Local DNS (Hosts File)
 
-Edit:
+```
+by Editing :
 
 C:\Windows\System32\drivers\etc\hosts
 
@@ -407,7 +408,9 @@ Example:
 52.174.xx.xx app.nordea.local
 Verify Deployment
 
-Open browser:
+```
+
+### Viewing the Nginx App Page:
 
 https://app.nordea.local
 
