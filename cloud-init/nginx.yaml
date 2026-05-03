@@ -1,0 +1,135 @@
+#cloud-config
+package_update: true
+
+packages:
+  - nginx
+
+write_files:
+  - path: /var/www/html/index.html
+    permissions: "0644"
+    content: |
+      <!doctype html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>MUTALE CHEWE</title>
+        <h3>(Senior Cloud Platform Architect/Engineer)</h3>
+
+        <style>
+          body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: linear-gradient(
+              135deg,
+              #0078D4,
+              #004578,
+              #001F3F
+            );
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+          }
+
+          .card {
+            background: rgba(255,255,255,0.08);
+            padding: 40px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 700px;
+          }
+
+          .badge {
+            background: #00BCF2;
+            color: #001F3F;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 16px;
+          }
+
+          h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+          }
+
+          h2 {
+            font-weight: 400;
+            opacity: 0.9;
+            margin-top: 0;
+          }
+
+          .details {
+            margin-top: 25px;
+            font-size: 15px;
+            opacity: 0.85;
+          }
+
+          .footer {
+            margin-top: 30px;
+            font-size: 13px;
+            opacity: 0.6;
+          }
+
+          .icon img{
+            width: 50px;
+            height: auto;
+          }
+        </style>
+
+      </head>
+
+      <body>
+
+        <div class="card">
+
+          <div class="icon"> <img src="https://logos-world.net/wp-content/uploads/2021/03/Azure-Logo-2020-present.png" alt="Azure Logo"width="80"/></div>
+
+          <div class="badge">
+            Azure Terraform Deployment
+          </div>
+
+          <h1>Norea Infrastructure Challenge</h1>
+
+          <h2>
+            IAC Tiered Web Application Successfully Deployed 
+          </h2>
+
+          <div class="details">
+
+            <p>
+              This web server is running inside a
+              <strong>private Azure Virtual Machine Scale Set</strong>
+              behind an
+              <strong>Application Gateway WAF</strong>.
+            </p>
+
+            <p>
+              Infrastructure deployed using
+              <strong>Terraform</strong> with secure networking,
+              private endpoints, and managed services.
+            </p>
+
+          </div>
+
+          <div class="footer">
+            Built with Azure · Terraform · Zero Trust Architecture
+          </div>
+
+        </div>
+
+      </body>
+      </html>
+
+runcmd:
+  - apt-get update -y
+  - apt-get install -y nginx
+  - systemctl enable nginx
+  - systemctl restart nginx
