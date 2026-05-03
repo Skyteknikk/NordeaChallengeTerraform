@@ -414,9 +414,7 @@ Verify Deployment
 
 https://app.nordea.local
 
-Expected:
-
-NGINX welcome page
+ ![AppPage](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/docs/AppPage.JPG)
 
 Or:
 
