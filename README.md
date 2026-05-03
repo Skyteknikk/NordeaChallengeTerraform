@@ -70,13 +70,12 @@ Reason for this design :
 
 ### Cloud-init for Configuration
 
-Used to install and configure Nginx automatically.
+> Used to install and configure Nginx automatically.
 
 Reason for this choice:
 
-Ensures full automation
-No manual intervention required
-Prerequisites
+-- Ensures full automation
+-- No manual intervention required
 
 ### Key Components
 
@@ -266,14 +265,14 @@ NordeaChallengeTerraform/
 
 ### Using Terraform as IaC
 
-
 Before running Terraform:
 
-Azure Subscription
-Azure CLI installed and logged in:
+-- Azure Subscription
+-- Azure CLI installed and logged in:
 az login
 Terraform installed (>= 1.5)
-How to Deploy
+
+### How to Deploy
 1. Initialize Terraform
 terraform init
 2. Validate Configuration
@@ -281,22 +280,23 @@ terraform validate
 3. Deploy Infrastructure
 terraform apply
 
-Type:
+(A tfplan is recommended but optional)
 
-yes
-Verification
+```
+###  Verification
 Step 1: Confirm VMSS is running
 az vmss list-instances \
   --resource-group rg-nordea-challenge-dev \
   --name vmss-web-nordea-challenge-dev \
   -o table
+
 Step 2: Test Application
 
 If using local DNS override:
 
 Add to hosts file:
 
-<APP_GATEWAY_PUBLIC_IP> app.nordea.local
+<app_Gateaway_public_ip> app.nordea.local
 
 Then test:
 
@@ -310,21 +310,22 @@ az network application-gateway show-backend-health \
   --name agw-nordea-challenge-dev \
   --resource-group rg-nordea-challenge-dev
 
+````
 Expected:
 
-Healthy
-Healthy
-Notes / Known Limitations
-Key Vault is configured with private access only; Terraform does not currently write secrets due to local execution context.
-SQL Database is provisioned but not actively used by the web tier (not required for this challenge).
-TLS certificate is self-signed (suitable for testing only).
-Future Improvements
-CI/CD pipeline (GitHub Actions)
-Managed Identity integration with Key Vault
-Autoscaling rules for VMSS
-Replace self-signed cert with Azure-managed certificate
-Observability (alerts + dashboards)
-Conclusion
+### Notes / Known Limitations if excuting locally
+
+-- Since Key Vault is configured with private access only; Terraform will not write secrets due to local execution context.
+-- SQL Database will be provisioned, however its not actively used by the web tier (not required for this challenge).
+-- TLS certificate is self-signed (suitable for testing only).
+
+### Foreseable Improvements
+
+-- CI/CD pipeline (GitHub Actions)
+-- Managed Identity integration with Key Vault
+-- Autoscaling rules for VMSS
+-- Replace self-signed cert with Azure-managed certificate
+-- Observability (alerts + dashboards)
 
 This solution demonstrates:
 
@@ -336,39 +337,6 @@ Author
 
 Mutale Chewe
 Senior Cloud Platform Engineer Candidate
-Terraform Modules Used
-Module	Purpose
-hub_network	Firewall + Bastion hub
-spoke_network	App + private resources
-bastion	Secure VM access
-compute	VM Scale Set (NGINX)
-app_gateway	HTTPS + WAF
-sql_database	Azure SQL + Private Endpoint
-keyvault	Secrets management
-monitoring	Log Analytics
-dns	Private DNS + App record
-Prerequisites
-
-Install the following tools:
-
-Terraform >= 1.5
-Azure CLI
-PowerShell
-Azure Subscription
-
-Verify:
-
-terraform version
-az version
-
-Login:
-
-az login
-
-Select subscription:
-
-az account set --subscription "<subscription-id>"
-Required Files
 
 Before running Terraform:
 
@@ -397,8 +365,10 @@ Export-PfxCertificate `
   -Cert $cert `
   -FilePath ".\certs\appgw-cert.pfx" `
   -Password $pwd
-Terraform Initialization
 
+
+### Terraform Initialization
+````
 Run:
 
 terraform init
@@ -417,16 +387,8 @@ terraform apply tfplan
 
 Deployment time:
 
-~15–25 minutes
+~15–30 minutes
 
-Major resources:
-
-Firewall
-Bastion
-Application Gateway
-SQL Database
-VM Scale Set
-After Deployment
 
 Retrieve outputs:
 
@@ -462,7 +424,8 @@ NGINX welcome page
 Or:
 
 curl -k https://app.nordea.local
-Security Features Implemented
+
+### Security Features Implemented
 Network Security
 Hub-Spoke segmentation
 NSGs applied per subnet
@@ -485,106 +448,87 @@ OWASP WAF:
 OWASP 3.2 Prevention Mode
 PCI DSS Alignment
 
-This architecture supports:
+### This architecture supports:
 
-PCI Requirement	Implementation
-Network Segmentation	Hub-Spoke VNet
-Firewall Controls	Azure Firewall
-Secure Admin Access	Azure Bastion
-Encryption in Transit	HTTPS
-Restricted DB Access	Private Endpoint
-Logging	Log Analytics
-Destroy Infrastructure
+> PCI Requirement	Implementation
+> Network Segmentation	Hub-Spoke VNet
+> Firewall Controls	Azure Firewall
+> Secure Admin Access	Azure Bastion
+> Encryption in Transit	HTTPS
+> Restricted DB Access	Private Endpoint
+> Logging	Log Analytics
+> Destroy Infrastructure
 
-To remove all resources:
+## To remove all resources:
 
-terraform destroy
-Cost Considerations
+-- terraform destroy
+
+### Cost Considerations
 
 Major cost drivers:
 
-Azure Firewall
-Application Gateway (WAF v2)
-Bastion
-VM Scale Set
+-- Azure Firewall
+-- Application Gateway (WAF v2)
+-- Bastion
+-- VM Scale Set
 
-Recommended:
+### Recommended:
 
-Destroy resources after testing.
-Architectural Decisions
-Why Hub-and-Spoke?
+-- Destroy resources after testing.
 
-Provides:
+### Architectural Decisions
 
-Centralized security
-Easier compliance
-Strong network segmentation
-
-Used in:
-
-Banking
-Healthcare
-PCI DSS workloads
-Why Application Gateway?
+##### Why Hub-and-Spoke?
 
 Provides:
 
-HTTPS termination
-Layer 7 routing
-Web Application Firewall
-Backend load balancing
-Why Private Endpoints?
+-- Centralized security
+-- Easier compliance
+-- Strong network segmentation
+
+Recommended WAF for Enterprise Solutioning:
+
+--- Banking
+--- Healthcare
+--- PCI DSS workloads
+
+#### Why Application Gateway?
+
+Provides:
+
+-- HTTPS termination
+-- Layer 7 routing
+-- Web Application Firewall
+-- Backend load balancing
+
+#### Why Private Endpoints?
 
 Prevents:
 
-Public internet database exposure
+-- Public internet database exposure
 
-All database access remains:
+-- All database access remains: Inside Azure private network
 
-Inside Azure private network
-Why Bastion?
+#### Why Bastion?
 
 Removes:
 
-Public SSH ports
+-- Public SSH ports
 
 Provides:
 
-Browser-based secure access
-Future Enhancements
+-- Browser-based secure access
 
-Recommended production upgrades:
+#### Possible Enhancements
 
-Azure Front Door
-Azure DDoS Protection
-Azure Sentinel integration
-Multi-region deployment
-Key Vault certificate automation
-Private DNS forwarding
-Repository Structure
-.
-├── modules/
-│   ├── hub_network/
-│   ├── spoke_network/
-│   ├── bastion/
-│   ├── compute/
-│   ├── app_gateway/
-│   ├── sql_database/
-│   ├── keyvault/
-│   ├── monitoring/
-│   ├── dns/
-│
-├── cloud-init/
-│   └── nginx.yaml
-│
-├── certs/
-│   └── appgw-cert.pfx
-│
-├── main.tf
-├── variables.tf
-├── terraform.tfvars
-└── README.md
+> - Recommended production upgrades:
 
+-- Azure Front Door
+-- Azure DDoS Protection
+-- Azure Sentinel integration
+-- Multi-region deployment
+-- Key Vault certificate automation
+-- Private DNS forwarding
 
 ## Identity Consideration
 
@@ -592,13 +536,8 @@ Repository Structure
 > - Aiming to easily integrates with App Service and simplifies authentication and authorization for web apps.
 
 ### Reliability Considerations
-
-> - The App Service Plan is configured for the Standard tier, which doesn't have Azure availability zone support. 
-> - The App Service becomes unavailable in the event of any issue with the instance, the rack, or the datacenter hosting the instance.
-> - The Azure SQL Database is configured for the Basic tier, which doesn't support zone-redundancy. This means that data isn't replicated across Azure availability zones, risking loss of committed data in the event of an outage.
-> - Deployments to this architecture might result in downtime with application deployments, as most deployment techniques require all running instances to be restarted. Users may experience 503 errors during this process. 
-> - This deployment downtime is addressed in the baseline architecture through deployment slots. Careful application design, schema management, and application configuration handling are necessary to support concurrent slot deployment. 
-> - Autoscaling isn't enabled in this basic architecture. Multi-region App Service app approaches for disaster recovery 
+ 
+> - Autoscaling VMset
 
 ### Security Considerations
 
@@ -617,52 +556,34 @@ Repository Structure
 
 ### Cost Optimization Considerations
 
-
 The solution architecture is optimizes for cost with a few trade offs against 7 pillars of the Well-Architected Framework such as scalabity and high availability
 The cost savings mainly effects the Baseline for highly available zone-redundant web application.
 
-> - Single App Service instance, with no autoscaling enabled
-> - Standard pricing tier for Azure App Service
-> - No custom TLS certificate or static IP
+> - Autoscaling enabled
+> - Pricing tiers carefully selected
 > - Basic pricing tier for Azure SQL Database, with no backup retention policies
-> - No private endpoints
 > - Minimal logs and log retention period in Log Analytics
 
 The estimated cost of this architecture can be computed using  the Pricing calculator estimate using this architecture's components.
 
 ### Operational Excellence Considerations
 
-App configurations
-
-App settings and connection strings are encrypted and decrypted 
-Secrets are to be stored in Azure Key Vault to improve the governance of secrets.
-Azure Key Vault enables the centralization of storing of secrets. 
-Using Azure Key Vault enables able the logging of every interaction with secrets, including every time a secret is accessed.
-
 
 ### Performance Efficiency Considerations
 
-> - Support for horizontal scaling by adjusting the number of compute instances deployed in the App Service Plan.
-> - The Standard tier does support auto scale settings to allow the configuration of rule-based autoscaling. 
 > - Considering production deployments, Premium tiers is recommended as it supports automatic autoscaling where the platform automatically handles scaling decisions.
 
 
 ## Security Considerations
 
-- Web App traffic is secured via allowing only **HTTPS** connections
 - SQL Server credentials are stored securely (use Azure Key Vault or GitHub Secrets)
 - Security enhancement Suggestions: Private endpoints for SQL, Private DNS Zones for SQL and KeyVault.
 - Infrastructure deployed with **Terraform** for auditability and version control
 
----
-
 ## Cost Optimization
 
-- **Basic SKU** used for App Service Plan and SQL Database
 - Minimum viable services deployed — scalable if needed
 - Use of **tags** for cost tracking and governance
-
----
 
 ##  Deployment Instructions
    # Option 1
