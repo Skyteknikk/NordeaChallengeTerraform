@@ -1,3 +1,63 @@
+##  Solution Overview
+
+This project provisions a Tiered  VM based Scalable Azure Web Application (Compute + Data Tier) provided by SQL Database Provisioned using Terraform. 
+The solution emphasizes cost-efficiency, security, and enterprise-grade best practices.
+Since its a single region demo, the deployment has not used features like Azure Front door or CDN, the solution does not implement  high availability in respect of the solution architecture.
+The solution may also be low on Performance Efficiency if it cannot be scaled
+
+# Solution Architecture Diagram
+
+ ![Architectural](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/Topology.png)
+This repository contains terraform code to deploy a stand alone Web app Azure App Services basic architecture.
+
+## ☁️ Solution Components Deployed
+
+- ✅ Azure Virtual Network With Subnets
+- ✅ Azure Subnets Fixed with NSG 
+- ✅ Azure Resource Group
+- ✅ Azure App Service Plan (Basic Tier)
+- ✅ Azure App Service (Web App)
+- ✅ Azure SQL Server
+- ✅ Azure SQL Database
+- ✅ Azure Application Gateway + WAF
+- ✅ Azure Key Vault
+- ✅ Azure Log Analytic Workspace
+
+- ⚙️  Azure Application Gateway or Azure Front Door will achieve the same thing to secure ingress in this deployment we go with Application Gateway
+-  Azure Key Vault is always recommended for secrets management either used by the application or database.
+
+# Reference for the Architecture
+
+[Basic SetApp](https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service/architectures/basic-web-app)
+[Enterprise Deployment] (https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service-environment/architectures/ase-standard-deployment)
+
+[Best Practices] (https://learn.microsoft.com/en-us/azure/well-architected/service-guides/app-service-web-apps)
+
+
+# App Logic Workflow
+
+> - A user issues an HTTPS request to the App Service's default domain on azurewebsites.net. This domain automatically points to your App Service's built-in public IP. 
+> - The TLS connection is established from the client directly to app service. The certificate is managed completely by Azure.
+> - Easy Auth, a feature of Azure App Service, ensures that the user accessing the site is authenticated with Microsoft Entra ID.
+> - connect to an Azure SQL Database instance, using a connection string configured in the App Service configured as an app setting.
+> - The information about original request to App Service and the call to Azure SQL Database are logged in Application Insights.
+
+## Project Structure
+
+
+```
+webapp-sql-terraform/
+│
+├── main.tf                # Main infrastructure definitions
+├── variables.tf           # All input variables
+├── terraform.tfvars       # Actual values for variables
+├── outputs.tf             # Outputs like WebApp URL
+│
+└── .github/
+    └── workflows/
+        └── deploy.yml     # GitHub Actions CI/CD workflow
+```
+
 Nordea Infrastructure as Code Challenge
 Overview
 
@@ -164,64 +224,7 @@ Author
 Mutale Chewe
 Senior Cloud Platform Engineer Candidate
 
-##  Overview
 
-This project provisions an Azure Web App and SQL Database using Terraform. The solution emphasizes cost-efficiency, security, and enterprise-grade best practices.
-Since its a standalone deployment of a WebApp using a App Azure Service, the solution does not implement or address scalability or high availability in respect of the solution architecture.
-The solution may also be low on Performance Efficiency if it cannot be scaled
-
-# Solution Architecture Diagram
-
- ![Architectural](https://github.com/Skyteknikk/WebApp001/blob/main/Solution.jpg)
-This repository contains terraform code to deploy a stand alone Web app Azure App Services basic architecture.
-
-## ☁️ Solution Components Deployed
-
-- ✅ Azure Virtual Network With Subnets
-- ✅ Azure Subnets Fixed with NSG 
-- ✅ Azure Resource Group
-- ✅ Azure App Service Plan (Basic Tier)
-- ✅ Azure App Service (Web App)
-- ✅ Azure SQL Server
-- ✅ Azure SQL Database
-- ✅ Azure Application Gateway + WAF
-- ✅ Azure Key Vault
-- ✅ Azure Log Analytic Workspace
-
-- ⚙️  Azure Application Gateway or Azure Front Door will achieve the same thing to secure ingress in this deployment we go with Application Gateway
--  Azure Key Vault is always recommended for secrets management either used by the application or database.
-
-# Reference for the Architecture
-
-[Basic SetApp](https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service/architectures/basic-web-app)
-[Enterprise Deployment] (https://learn.microsoft.com/en-us/azure/architecture/web-apps/app-service-environment/architectures/ase-standard-deployment)
-
-[Best Practices] (https://learn.microsoft.com/en-us/azure/well-architected/service-guides/app-service-web-apps)
-
-
-# App Logic Workflow
-
-> - A user issues an HTTPS request to the App Service's default domain on azurewebsites.net. This domain automatically points to your App Service's built-in public IP. 
-> - The TLS connection is established from the client directly to app service. The certificate is managed completely by Azure.
-> - Easy Auth, a feature of Azure App Service, ensures that the user accessing the site is authenticated with Microsoft Entra ID.
-> - connect to an Azure SQL Database instance, using a connection string configured in the App Service configured as an app setting.
-> - The information about original request to App Service and the call to Azure SQL Database are logged in Application Insights.
-
-## Project Structure
-
-
-```
-webapp-sql-terraform/
-│
-├── main.tf                # Main infrastructure definitions
-├── variables.tf           # All input variables
-├── terraform.tfvars       # Actual values for variables
-├── outputs.tf             # Outputs like WebApp URL
-│
-└── .github/
-    └── workflows/
-        └── deploy.yml     # GitHub Actions CI/CD workflow
-```
 
 # Identity Consideration
 
