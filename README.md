@@ -7,7 +7,7 @@ The solution may also be low on Performance Efficiency if it cannot be scaled
 
 ### Solution Architecture Diagram
 
- ![Architectural](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/Topology.png)
+ ![Architectural](https://github.com/Skyteknikk/NordeaChallengeTerraform/blob/main/docs/Topology1.JPG)
 This repository contains terraform code to deploy a stand alone Web app Azure App Services basic architecture.
 
 ### Solution Components Deployed
