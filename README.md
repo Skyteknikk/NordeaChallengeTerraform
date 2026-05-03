@@ -12,17 +12,49 @@ This repository contains terraform code to deploy a stand alone Web app Azure Ap
 
 # Solution Components Deployed
 
-- ✅ Azure Virtual Network With Subnets
-- ✅ Azure Subnets Fixed with NSG 
-- ✅ Azure Resource Group
-- ✅ Azure App Service Plan (Basic Tier)
-- ✅ Azure App Service (Web App)
-- ✅ Azure SQL Server
-- ✅ Azure SQL Database
-- ✅ Azure Application Gateway + WAF
-- ✅ Azure Key Vault
-- ✅ Azure Log Analytic Workspace
+- Hub VNet (10.50.0.0/16)
+- Azure Firewall (egress control)
+- Azure Bastion (secure admin access)
+- Spoke VNet (10.40.0.0/16)
+- Application Gateway (WAF, HTTPS entry point)
+- VMSS (web tier)
+- Private Endpoints (Key Vault + SQL)
+- Network Security Groups (segmentation)
+- Global / Platform Services
+- Azure Entra ID (identity & RBAC)
+- Azure Key Vault (secrets)
+- Azure SQL Database (data tier)
+- Azure DNS (custom domain)
+  
+## Key Components
 
+```
+1. Compute Tier
+Azure Virtual Machine Scale Set (VMSS)
+Runs Nginx via cloud-init
+Autoscaling-ready and highly available
+2. Data Tier
+Azure SQL Database
+Private endpoint enabled
+Public access disabled
+3. Traffic Distribution
+Azure Application Gateway (WAF_v2)
+HTTPS listener with TLS termination
+Routes traffic to VMSS backend pool
+4. Security & Networking
+Hub-Spoke topology with VNet peering
+Azure Firewall for outbound control
+NSGs to restrict traffic between tiers
+Private Endpoints for PaaS services
+No public access to database or Key Vault
+5. DNS & Routing
+Azure DNS Zone
+Custom hostname mapped to Application Gateway
+Local hosts file can be used for testing
+Architectural Decisions
+Hub-Spoke Model
+
+```
 -  Azure Application Gateway or Azure Front Door will achieve the same thing to secure ingress in this deployment we go with Application Gateway
 -  Azure Key Vault is always recommended for secrets management either used by the application or database.
 
