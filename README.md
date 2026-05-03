@@ -157,17 +157,17 @@ The application itself is a simple Nginx web server deployed on a Virtual Machin
 
 ### Architecture Summary (High-Level Design)
 
-`
-Hub VNet (10.50.0.0/16)
-Azure Firewall (egress control)
-Azure Bastion (secure admin access)
-Spoke VNet (10.40.0.0/16)
-Application Gateway (WAF, HTTPS entry point)
-VMSS (web tier)
-Private Endpoints (Key Vault + SQL)
-Network Security Groups (segmentation)
-Global / Platform Services
-Azure Entra ID (identity & RBAC)
+```
+-- Hub VNet (10.50.0.0/16)
+-- Azure Firewall (egress control)
+-- Azure Bastion (secure admin access)
+-- Spoke VNet (10.40.0.0/16)
+-- Application Gateway (WAF, HTTPS entry point)
+-- VMSS (web tier)
+-- Private Endpoints (Key Vault + SQL)
+-- Network Security Groups (segmentation)
+-- Global / Platform Services
+-- Azure Entra ID (identity & RBAC)
 Azure Key Vault (secrets)
 Azure SQL Database (data tier)
 Azure DNS (custom domain)
@@ -197,7 +197,7 @@ Local hosts file can be used for testing
 Architectural Decisions
 Hub-Spoke Model
 
-`
+```
 
 Separates shared services (firewall, bastion) from application workloads.
 
